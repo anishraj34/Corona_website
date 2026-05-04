@@ -50,11 +50,14 @@ const AuthUserSchema = new mongoose.Schema({
 const AuthUser = mongoose.model("AuthUser", AuthUserSchema);
 
 // Passport Google Strategy (only if credentials are set)
-if (GOOGLE_CLIENT_ID && GOOGLE_CLIENT_ID !== 'YOUR_GOOGLE_CLIENT_ID') {
+const effectiveGoogleClientId = GOOGLE_CLIENT_ID;
+const effectiveGoogleClientSecret = GOOGLE_CLIENT_SECRET;
+const effectiveCallbackURL = process.env.GOOGLE_CALLBACK_URL || `http://localhost:${PORT}/auth/google/callback`;
+if (effectiveGoogleClientId && effectiveGoogleClientId !== 'YOUR_GOOGLE_CLIENT_ID') {
     passport.use(new GoogleStrategy({
-        clientID: GOOGLE_CLIENT_ID,
-        clientSecret: GOOGLE_CLIENT_SECRET,
-        callbackURL: `http://localhost:${PORT}/auth/google/callback`
+        clientID: effectiveGoogleClientId,
+        clientSecret: effectiveGoogleClientSecret,
+        callbackURL: effectiveCallbackURL
     }, async (accessToken, refreshToken, profile, done) => {
         try {
             let user = await AuthUser.findOne({ googleId: profile.id });
@@ -370,7 +373,7 @@ app.post("/api/auth/login", async (req, res) => {
 
 // Google OAuth
 app.get("/auth/google", (req, res, next) => {
-    if (!GOOGLE_CLIENT_ID || GOOGLE_CLIENT_ID === 'YOUR_GOOGLE_CLIENT_ID') {
+    if (!effectiveGoogleClientId) {
         return res.redirect('/auth.html?error=google_not_configured');
     }
     passport.authenticate("google", { scope: ["profile", "email"] })(req, res, next);
