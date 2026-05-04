@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CovidCheck — COVID-19 Risk Assessment</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+</head>
+
+<body>
+
+<!-- ⚠️ YAHAN TUMHARA FULL HTML SAME TO SAME RAHEGA -->
+<!-- NAV + HOME + PREDICTOR + STATS + GUIDELINES -->
+<!-- (Jo tumne bheja tha — exact copy paste) -->
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" onclick="showPage('home')">
+      <div class="nav-logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <span>CovidCheck</span>
+    </a>
+    <div class="nav-links">
+      <button class="nav-link active" id="nav-home" onclick="showPage('home')">Home</button>
+      <button class="nav-link" id="nav-predictor" onclick="showPage('predictor')">Risk Assessment</button>
+      <button class="nav-link" id="nav-statistics" onclick="showPage('statistics')">Statistics</button>
+      <button class="nav-link" id="nav-guidelines" onclick="showPage('guidelines')">Guidelines</button>
+    </div>
+    <div id="nav-user"></div>
+    <button class="nav-cta" onclick="showPage('predictor')">Check My Risk</button>
+    <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+      <svg id="hamburger-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#334155" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="mobile-menu" id="mobile-menu">
+    <button class="nav-link" onclick="showPage('home');toggleMenu()">Home</button>
+    <button class="nav-link" onclick="showPage('predictor');toggleMenu()">Risk Assessment</button>
+    <button class="nav-link" onclick="showPage('statistics');toggleMenu()">Statistics</button>
+    <button class="nav-link" onclick="showPage('guidelines');toggleMenu()">Guidelines</button>
+  </div>
+</nav>
+
+<!-- ─────────── HOME PAGE ─────────── -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <canvas id="particles-canvas"></canvas>
+    <div class="hero-badge">🛡️ COVID-19 Risk Assessment Tool</div>
+    <h1>Know Your <span>COVID-19</span> Risk</h1>
+    <p id="typing-text"></p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="showPage('predictor')">Start Assessment →</button>
+      <button class="btn-outline" onclick="showPage('guidelines')">📖 View Guidelines</button>
+    </div>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stats-grid">
+      <div class="stat-item"><div class="stat-icon">👥</div><div class="stat-value" style="color:var(--primary)" id="user-count-stat">...</div><div class="stat-label">Registered Users</div></div>
+      <div class="stat-item"><div class="stat-icon">✅</div><div class="stat-value" style="color:var(--green)" data-count="94" data-suffix="%">94%</div><div class="stat-label">Accuracy Rate</div></div>
+      <div class="stat-item"><div class="stat-icon">📈</div><div class="stat-value" style="color:var(--orange)" data-count="180" data-suffix="+">180+</div><div class="stat-label">Countries Covered</div></div>
+      <div class="stat-item"><div class="stat-icon">🛡️</div><div class="stat-value" style="color:#7c3aed" data-count="2024" data-suffix="">2024</div><div class="stat-label">Guidelines Updated</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-inner">
+      <div class="section-title">How It Works</div>
+      <div class="section-sub">Three simple steps to understand your risk</div>
+      <div class="how-grid">
+        <div class="how-card reveal"><div class="how-num">01</div><div class="how-icon">🤒</div><h3>Enter Your Symptoms</h3><p>Tell us about symptoms you're experiencing — fever, cough, fatigue, loss of smell or taste, and more.</p></div>
+        <div class="how-card reveal"><div class="how-num">02</div><div class="how-icon">🧬</div><h3>Risk Analysis</h3><p>Our algorithm analyzes your symptoms alongside risk factors like age, underlying conditions, and vaccination status.</p></div>
+        <div class="how-card reveal"><div class="how-num">03</div><div class="how-icon">📋</div><h3>Get Guidance</h3><p>Receive personalized recommendations — self-isolate, get tested, or seek immediate medical care.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" style="background:#fff; border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+    <div class="section-inner">
+      <div class="section-title">Risk Level Categories</div>
+      <div class="section-sub">Understanding your assessment result</div>
+      <div class="risk-grid">
+        <div class="risk-card" style="background:#f0fdf4;border-color:#86efac;">
+          <div class="risk-dot" style="background:var(--green)"></div>
+          <h3 style="color:var(--green)">Low Risk</h3>
+          <p style="color:#166534">Minimal symptoms, no high-risk factors. Monitor at home.</p>
+        </div>
+        <div class="risk-card" style="background:#fefce8;border-color:#fde047;">
+          <div class="risk-dot" style="background:var(--yellow)"></div>
+          <h3 style="color:var(--yellow)">Moderate Risk</h3>
+          <p style="color:#854d0e">Some symptoms. Consider testing and self-monitoring.</p>
+        </div>
+        <div class="risk-card" style="background:#fff7ed;border-color:#fdba74;">
+          <div class="risk-dot" style="background:var(--orange)"></div>
+          <h3 style="color:var(--orange)">High Risk</h3>
+          <p style="color:#9a3412">Multiple symptoms. Get tested, consult a doctor.</p>
+        </div>
+        <div class="risk-card" style="background:#fef2f2;border-color:#fca5a5;">
+          <div class="risk-dot" style="background:var(--red)"></div>
+          <h3 style="color:var(--red)">Critical Risk</h3>
+          <p style="color:#991b1b">Severe symptoms. Seek immediate medical attention.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-inner">
+      <div class="disclaimer">
+        <div class="disclaimer-icon">⚠️</div>
+        <div>
+          <h4>Medical Disclaimer</h4>
+          <p>This tool is for informational purposes only and does not replace professional medical advice, diagnosis, or treatment. If you are experiencing a medical emergency, call your local emergency services immediately. Always consult a qualified healthcare provider for medical concerns.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="home-cta">
+    <h2>Ready to Check Your Risk?</h2>
+    <p>Takes less than 2 minutes. Get personalized guidance right away.</p>
+    <button class="btn-white" onclick="showPage('predictor')">Check My Risk Now →</button>
+  </div>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-logo"><div class="footer-logo-icon">🛡️</div> CovidCheck</div>
+      <p>For emergencies, call your local emergency services immediately.</p>
+      <p>This tool does not provide medical diagnoses. Always consult a healthcare professional.</p>
+    </div>
+  </footer>
+</div>
+
+<!-- ─────────── PREDICTOR PAGE ─────────── -->
+<div class="page" id="page-predictor">
+  <div class="predictor-wrap">
+    <div class="predictor-header">
+      <h1>COVID-19 Risk Assessment</h1>
+      <p>Answer honestly for the most accurate result</p>
+    </div>
+
+    <!-- Progress -->
+    <div class="progress-bar-wrap">
+      <div class="step-dot">
+        <div class="step-circle active" id="step1">1</div>
+        <div class="step-label active" id="step1-label">Symptoms</div>
+      </div>
+      <div class="step-connector" id="conn1"></div>
+      <div class="step-dot">
+        <div class="step-circle" id="step2">2</div>
+        <div class="step-label" id="step2-label">Risk Factors</div>
+      </div>
+      <div class="step-connector" id="conn2"></div>
+      <div class="step-dot">
+        <div class="step-circle" id="step3">3</div>
+        <div class="step-label" id="step3-label">Your Result</div>
+      </div>
+    </div>
+
+    <!-- Step 1: Symptoms -->
+    <div id="s1" class="card">
+      <h2>Current Symptoms</h2>
+      <div style="margin-bottom:15px;">
+        <input type="text" id="name" placeholder="Enter your name" class="form-input">
+      </div>
+      <div style="margin-bottom:15px;">
+        <select id="gender" class="form-input">
+          <option value="">-- Select Gender --</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div style="margin-bottom:15px;">
+        <input type="number" id="age" placeholder="Enter age" class="form-input">
+      </div>
+      <p class="card-sub">Select all symptoms you are currently experiencing:</p>
+      <div class="symptom-list">
+        <button class="symptom-btn" data-id="fever" onclick="toggleItem(this,'symptoms')">
+          <span class="symptom-label">Fever (temp &gt; 38°C / 100.4°F)</span>
+          <div class="symptom-check">✓</div>
+        </button>
+        <button class="symptom-btn" data-id="cough" onclick="toggleItem(this,'symptoms')">
+          <span class="symptom-label">Dry Cough</span>
+          <div class="symptom-check">✓</div>
+        </button>
+        <button class="symptom-btn" data-id="sore_throat" onclick="toggleItem(this,'symptoms')">
+          <span class="symptom-label">Sore Throat</span>
+          <div class="symptom-check">✓</div>
+        </button>
+        <button class="symptom-btn" data-id="headache" onclick="toggleItem(this,'symptoms')">
+          <span class="symptom-label">Headache</span>
+          <div class="symptom-check">✓</div>
+        </button>
+        <button class="symptom-btn" data-id="smell" onclick="toggleItem(this,'symptoms')">
+          <span class="symptom-label">Loss of Smell or Taste</span>
+          <div class="symptom-check">✓</div>
+        </button>
+        <button class="symptom-btn" data-id="breathing" onclick="toggleItem(this,'symptoms')">
+          <span class="symptom-label">Shortness of Breath</span>
+          <div class="symptom-check">✓</div>
+        </button>
+        <button class="symptom-btn" data-id="fatigue" onclick="toggleItem(this,'symptoms')">
+          <span class="symptom-label">Fatigue</span>
+          <div class="symptom-check">✓</div>
+        </button>
+        <button class="symptom-btn" data-id="chest" onclick="toggleItem(this,'symptoms')">
+          <span class="symptom-label">Chest Pain</span>
+          <div class="symptom-check">✓</div>
+        </button>
+      </div>
+
+      <div style="margin-top:14px;">
+        <textarea id="other_symptoms" class="form-input" rows="3"
+          placeholder="Describe any other symptoms not listed above (e.g. body ache, nausea, rash...)"
+          style="resize:vertical; min-height:80px;"></textarea>
+      </div>
+      <div class="card-footer">
+        <span class="count-label" id="symptom-count">0 selected</span>
+        <button class="btn-primary" onclick="goToStep2()">Continue →</button>
+      </div>
+    </div>
+
+    <!-- Step 2: Risk Factors -->
+    <div id="s2" class="card" style="display:none">
+      <h2>Risk Factors</h2>
+      <p class="card-sub">Select any that apply to you:</p>
+      <div style="margin-bottom:15px;">
+        <input type="number" id="oxygen_level" min="50" max="100" placeholder="Oxygen Level (%)" class="form-input">
+      </div>
+      <div style="margin-bottom:15px;">
+        <input type="number" id="body_temperature" min="34" max="45" step="0.1" placeholder="Body Temperature (°C)" class="form-input">
+      </div>
+      <div class="symptom-list">
+        <button class="symptom-btn" data-id="diabetes" onclick="toggleItem(this,'risks')">
+          <span class="symptom-label">Diabetes</span>
+          <div class="symptom-check">✓</div>
+        </button>
+        <button class="symptom-btn" data-id="asthma" onclick="toggleItem(this,'risks')">
+          <span class="symptom-label">Asthma</span>
+          <div class="symptom-check">✓</div>
+        </button>
+        <button class="symptom-btn" data-id="heart_disease" onclick="toggleItem(this,'risks')">
+          <span class="symptom-label">Heart Disease</span>
+          <div class="symptom-check">✓</div>
+        </button>
+        <button class="symptom-btn" data-id="travel_history" onclick="toggleItem(this,'risks')">
+          <span class="symptom-label">Travel History</span>
+          <div class="symptom-check">✓</div>
+        </button>
+        <button class="symptom-btn" data-id="contact_with_infected_person" onclick="toggleItem(this,'risks')">
+          <span class="symptom-label">Contact with Infected Person</span>
+          <div class="symptom-check">✓</div>
+        </button>
+      </div>
+      <div class="card-footer">
+        <button class="btn-back" onclick="goToStep1()">← Back</button>
+        <button class="btn-primary" onclick="showResult()">Get My Result →</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Result -->
+    <div id="s3" style="display:none">
+
+      <!-- Main Result Card -->
+      <div id="result-main" class="result-main">
+        <div class="result-icon-wrap" id="result-icon"></div>
+        <div class="result-level" id="result-level-text"></div>
+        <div class="result-sub-text" id="result-sub-text"></div>
+        <div class="result-progress">
+          <div class="result-prog-bg">
+            <div class="result-prog-fill" id="result-prog" style="width:0%"></div>
+          </div>
+          <div class="result-pct" id="result-pct"></div>
+        </div>
+      </div>
+
+      <!-- Emergency / Doctor Banners -->
+      <div id="emergency-banner" class="emergency-banner" style="display:none">
+        <div class="banner-icon">📞</div>
+        <div>
+          <div class="banner-title">Call Emergency Services Now</div>
+          <div class="banner-sub">Your symptoms may require immediate medical attention. Call 112 or your local emergency number.</div>
+        </div>
+      </div>
+      <div id="doctor-banner" class="doctor-banner" style="display:none">
+        <div class="banner-icon">🏥</div>
+        <div>
+          <div class="banner-title">Contact a Doctor</div>
+          <div class="banner-sub">Schedule a medical consultation as soon as possible.</div>
+        </div>
+      </div>
+
+      <!-- Stats Row -->
+      <div class="result-stats-row">
+        <div class="result-stat-box">
+          <div class="result-stat-val" id="sum-symptoms">0</div>
+          <div class="result-stat-label">Symptoms</div>
+        </div>
+        <div class="result-stat-box">
+          <div class="result-stat-val" id="sum-risks">0</div>
+          <div class="result-stat-label">Risk Factors</div>
+        </div>
+        <div class="result-stat-box">
+          <div class="result-stat-val" id="result-stat-pct">0%</div>
+          <div class="result-stat-label">Risk Score</div>
+        </div>
+      </div>
+
+      <!-- Recommended Actions -->
+      <div class="card actions-card" style="margin-bottom:16px">
+        <h3>Recommended Actions</h3>
+        <div id="actions-list"></div>
+      </div>
+
+      <!-- Tags Summary -->
+      <div class="card summary-card" style="margin-bottom:16px">
+        <h3>Your Assessment Summary</h3>
+        <div id="symptom-tags" style="margin-bottom:12px"></div>
+        <div id="risk-tags"></div>
+      </div>
+
+      <div class="reset-wrap">
+        <button class="btn-ghost" onclick="resetPredictor()">↺ Retake Assessment</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-logo"><div class="footer-logo-icon">🛡️</div> CovidCheck</div>
+      <p>For emergencies, call your local emergency services immediately.</p>
+      <p>This tool does not provide medical diagnoses. Always consult a healthcare professional.</p>
+    </div>
+  </footer>
+</div>
+
+<!-- ─────────── STATISTICS PAGE ─────────── -->
+<div class="page" id="page-statistics">
+  <div class="stats-page">
+    <div class="stats-inner">
+      <div class="stats-header">
+        <div class="hero-badge" style="margin-bottom:14px">🌐 Global Data — Updated 2024</div>
+        <h1>COVID-19 Global Statistics</h1>
+        <p style="color:var(--fg2)">Comprehensive worldwide data on cases, mortality, vaccination, and variants.</p>
+      </div>
+
+      <div class="global-cards">
+        <div class="global-card" data-tooltip="Cumulative since 2020"><div class="global-label">Total Confirmed Cases</div><div class="global-val" style="color:var(--orange)">700M+</div><div class="global-change"><span class="live-dot"></span>📈 +0.1% this week</div></div>
+        <div class="global-card" data-tooltip="WHO reported deaths"><div class="global-label">Total Deaths</div><div class="global-val" style="color:var(--red)">7.06M</div><div class="global-change"><span class="live-dot"></span>📈 +0.05% this week</div></div>
+        <div class="global-card" data-tooltip="At least one dose"><div class="global-label">Fully Vaccinated</div><div class="global-val" style="color:var(--green)">5.55B</div><div class="global-change"><span class="live-dot"></span>📈 +0.2% this week</div></div>
+        <div class="global-card" data-tooltip="Countries with reported cases"><div class="global-label">Countries Affected</div><div class="global-val" style="color:var(--primary)">230+</div><div class="global-change">🌐 stable</div></div>
+      </div>
+
+      <div class="chart-grid">
+        <!-- Top Countries -->
+        <div class="chart-card">
+          <h3>Top Affected Countries</h3>
+          <p>Total cases in millions</p>
+          <div class="bar-chart">
+            <div class="bar-row"><div class="bar-label">USA</div><div class="bar-track"><div class="bar-fill" style="--target-width:100%;background:var(--primary)">103M</div></div></div>
+            <div class="bar-row"><div class="bar-label">India</div><div class="bar-track"><div class="bar-fill" style="--target-width:43%;background:var(--primary)">45M</div></div></div>
+            <div class="bar-row"><div class="bar-label">France</div><div class="bar-track"><div class="bar-fill" style="--target-width:38%;background:var(--primary)">40M</div></div></div>
+            <div class="bar-row"><div class="bar-label">Germany</div><div class="bar-track"><div class="bar-fill" style="--target-width:37%;background:var(--primary)">38M</div></div></div>
+            <div class="bar-row"><div class="bar-label">Brazil</div><div class="bar-track"><div class="bar-fill" style="--target-width:36%;background:var(--primary)">37M</div></div></div>
+            <div class="bar-row"><div class="bar-label">Japan</div><div class="bar-track"><div class="bar-fill" style="--target-width:32%;background:var(--primary)">33M</div></div></div>
+            <div class="bar-row"><div class="bar-label">S.Korea</div><div class="bar-track"><div class="bar-fill" style="--target-width:31%;background:var(--primary)">32M</div></div></div>
+            <div class="bar-row"><div class="bar-label">Italy</div><div class="bar-track"><div class="bar-fill" style="--target-width:25%;background:var(--primary)">26M</div></div></div>
+          </div>
+        </div>
+
+        <!-- Dominant Variants -->
+        <div class="chart-card">
+          <h3>Dominant Variants</h3>
+          <p>Global distribution (early 2024)</p>
+          <div class="pie-wrap">
+            <svg class="pie-chart-svg" viewBox="0 0 180 180">
+              <!-- Pie: JN.1=55%, XBB.1.5=20%, EG.5=12%, HV.1=8%, Others=5% -->
+              <!-- Calculated using SVG path arcs -->
+              <circle cx="90" cy="90" r="70" fill="#e2e8f0"/>
+              <!-- Slice 1: JN.1 55% = 198deg -->
+              <path d="M90,90 L90,20 A70,70 0 1,1 11.8,108.5 Z" fill="#0ea5e9"/>
+              <!-- Slice 2: XBB 20% = 72deg -->
+              <path d="M90,90 L11.8,108.5 A70,70 0 0,1 52.5,152.7 Z" fill="#22c55e"/>
+              <!-- Slice 3: EG.5 12% = 43.2deg -->
+              <path d="M90,90 L52.5,152.7 A70,70 0 0,1 88.5,160 Z" fill="#f59e0b"/>
+              <!-- Slice 4: HV.1 8% = 28.8deg -->
+              <path d="M90,90 L88.5,160 A70,70 0 0,1 113,157.5 Z" fill="#a855f7"/>
+              <!-- Slice 5: Others 5% = 18deg -->
+              <path d="M90,90 L113,157.5 A70,70 0 0,1 90,20 Z" fill="#6b7280"/>
+              <circle cx="90" cy="90" r="36" fill="white"/>
+              <text x="90" y="87" text-anchor="middle" font-size="11" font-weight="700" fill="#334155">Variants</text>
+              <text x="90" y="101" text-anchor="middle" font-size="10" fill="#64748b">2024</text>
+            </svg>
+          </div>
+          <div class="pie-legend">
+            <div class="pie-item"><div class="pie-dot" style="background:#0ea5e9"></div>JN.1 — 55%</div>
+            <div class="pie-item"><div class="pie-dot" style="background:#22c55e"></div>XBB.1.5 — 20%</div>
+            <div class="pie-item"><div class="pie-dot" style="background:#f59e0b"></div>EG.5 — 12%</div>
+            <div class="pie-item"><div class="pie-dot" style="background:#a855f7"></div>HV.1 — 8%</div>
+            <div class="pie-item"><div class="pie-dot" style="background:#6b7280"></div>Others — 5%</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-grid">
+        <!-- Age Severity -->
+        <div class="chart-card">
+          <h3>Severity by Age Group</h3>
+          <p>Severe illness rate (%) by age</p>
+          <div class="h-bar-chart">
+            <div class="h-bar-row"><div class="h-bar-label">0–17</div><div class="h-bar-track"><div class="h-bar-fill" style="--target-width:4%;background:var(--green)">3%</div></div></div>
+            <div class="h-bar-row"><div class="h-bar-label">18–29</div><div class="h-bar-track"><div class="h-bar-fill" style="--target-width:11%;background:var(--green)">8%</div></div></div>
+            <div class="h-bar-row"><div class="h-bar-label">30–39</div><div class="h-bar-track"><div class="h-bar-fill" style="--target-width:17%;background:#84cc16">12%</div></div></div>
+            <div class="h-bar-row"><div class="h-bar-label">40–49</div><div class="h-bar-track"><div class="h-bar-fill" style="--target-width:25%;background:var(--yellow)">18%</div></div></div>
+            <div class="h-bar-row"><div class="h-bar-label">50–64</div><div class="h-bar-track"><div class="h-bar-fill" style="--target-width:44%;background:var(--orange)">32%</div></div></div>
+            <div class="h-bar-row"><div class="h-bar-label">65–74</div><div class="h-bar-track"><div class="h-bar-fill" style="--target-width:67%;background:var(--orange)">48%</div></div></div>
+            <div class="h-bar-row"><div class="h-bar-label">75+</div><div class="h-bar-track"><div class="h-bar-fill" style="--target-width:100%;background:var(--red)">72%</div></div></div>
+          </div>
+        </div>
+
+        <!-- Symptom Frequency -->
+        <div class="chart-card">
+          <h3>Symptom Frequency</h3>
+          <p>% of patients reporting each symptom</p>
+          <div class="h-bar-chart">
+            <div class="h-bar-row"><div class="h-bar-label">Fever</div><div class="h-bar-track"><div class="h-bar-fill" style="--target-width:89%;background:var(--primary)">89%</div></div></div>
+            <div class="h-bar-row"><div class="h-bar-label">Fatigue</div><div class="h-bar-track"><div class="h-bar-fill" style="--target-width:85%;background:var(--primary)">85%</div></div></div>
+            <div class="h-bar-row"><div class="h-bar-label">Cough</div><div class="h-bar-track"><div class="h-bar-fill" style="--target-width:78%;background:var(--primary)">78%</div></div></div>
+            <div class="h-bar-row"><div class="h-bar-label">Loss Smell</div><div class="h-bar-track"><div class="h-bar-fill" style="--target-width:60%;background:var(--primary)">60%</div></div></div>
+            <div class="h-bar-row"><div class="h-bar-label">Headache</div><div class="h-bar-track"><div class="h-bar-fill" style="--target-width:55%;background:var(--primary)">55%</div></div></div>
+            <div class="h-bar-row"><div class="h-bar-label">Sore Throat</div><div class="h-bar-track"><div class="h-bar-fill" style="--target-width:52%;background:var(--primary)">52%</div></div></div>
+            <div class="h-bar-row"><div class="h-bar-label">Breathless</div><div class="h-bar-track"><div class="h-bar-fill" style="--target-width:40%;background:var(--orange)">40%</div></div></div>
+            <div class="h-bar-row"><div class="h-bar-label">Body Ache</div><div class="h-bar-track"><div class="h-bar-fill" style="--target-width:36%;background:var(--primary)">36%</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Monthly trend via SVG line chart -->
+      <div class="chart-card" style="margin-bottom:24px">
+        <h3>Monthly Case Trend</h3>
+        <p>Global new cases (thousands) — Jan 2023 to Mar 2024</p>
+        <div class="line-chart-wrap">
+          <svg class="line-chart-svg" viewBox="0 0 560 140" preserveAspectRatio="xMidYMid meet">
+            <defs>
+              <linearGradient id="lineGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#0284c7" stop-opacity="0.15"/>
+                <stop offset="100%" stop-color="#0284c7" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <!-- Grid lines -->
+            <line x1="40" y1="10" x2="540" y2="10" stroke="#e2e8f0" stroke-width="1"/>
+            <line x1="40" y1="37" x2="540" y2="37" stroke="#e2e8f0" stroke-width="1"/>
+            <line x1="40" y1="64" x2="540" y2="64" stroke="#e2e8f0" stroke-width="1"/>
+            <line x1="40" y1="91" x2="540" y2="91" stroke="#e2e8f0" stroke-width="1"/>
+            <line x1="40" y1="118" x2="540" y2="118" stroke="#e2e8f0" stroke-width="1"/>
+            <!-- Y labels -->
+            <text x="35" y="14" text-anchor="end" font-size="9" fill="#94a3b8">180</text>
+            <text x="35" y="41" text-anchor="end" font-size="9" fill="#94a3b8">135</text>
+            <text x="35" y="68" text-anchor="end" font-size="9" fill="#94a3b8">90</text>
+            <text x="35" y="95" text-anchor="end" font-size="9" fill="#94a3b8">45</text>
+            <text x="35" y="122" text-anchor="end" font-size="9" fill="#94a3b8">0</text>
+            <!-- Data: values mapped 0-180 -> y 118-10 (range 108px) -->
+            <!-- Points: Jan23=180,Feb=140,Mar=95,Apr=65,May=40,Jun=35,Jul=55,Aug=75,Sep=60,Oct=45,Nov=38,Dec=30,Jan24=42,Feb24=28,Mar24=22 -->
+            <!-- x positions: 40 + i*36 -->
+            <path d="M40,10 L76,34 L112,61 L148,79 L184,94 L220,97 L256,85 L292,73 L328,82 L364,91 L400,96 L436,100 L472,95 L508,103 L540,107"
+              fill="url(#lineGrad)" stroke="none" opacity="1"/>
+            <path d="M40,10 L76,34 L112,61 L148,79 L184,94 L220,97 L256,85 L292,73 L328,82 L364,91 L400,96 L436,100 L472,95 L508,103 L540,107"
+              fill="none" stroke="#0284c7" stroke-width="2.5" stroke-linejoin="round"/>
+            <!-- Dots -->
+            <circle cx="40" cy="10" r="3.5" fill="#0284c7"/>
+            <circle cx="76" cy="34" r="3.5" fill="#0284c7"/>
+            <circle cx="112" cy="61" r="3.5" fill="#0284c7"/>
+            <circle cx="148" cy="79" r="3.5" fill="#0284c7"/>
+            <circle cx="184" cy="94" r="3.5" fill="#0284c7"/>
+            <circle cx="220" cy="97" r="3.5" fill="#0284c7"/>
+            <circle cx="256" cy="85" r="3.5" fill="#0284c7"/>
+            <circle cx="292" cy="73" r="3.5" fill="#0284c7"/>
+            <circle cx="328" cy="82" r="3.5" fill="#0284c7"/>
+            <circle cx="364" cy="91" r="3.5" fill="#0284c7"/>
+            <circle cx="400" cy="96" r="3.5" fill="#0284c7"/>
+            <circle cx="436" cy="100" r="3.5" fill="#0284c7"/>
+            <circle cx="472" cy="95" r="3.5" fill="#0284c7"/>
+            <circle cx="508" cy="103" r="3.5" fill="#0284c7"/>
+            <circle cx="540" cy="107" r="3.5" fill="#0284c7"/>
+            <!-- X labels (every 2) -->
+            <text x="40" y="132" text-anchor="middle" font-size="8" fill="#94a3b8">Jan'23</text>
+            <text x="112" y="132" text-anchor="middle" font-size="8" fill="#94a3b8">Mar'23</text>
+            <text x="184" y="132" text-anchor="middle" font-size="8" fill="#94a3b8">May'23</text>
+            <text x="256" y="132" text-anchor="middle" font-size="8" fill="#94a3b8">Jul'23</text>
+            <text x="328" y="132" text-anchor="middle" font-size="8" fill="#94a3b8">Sep'23</text>
+            <text x="400" y="132" text-anchor="middle" font-size="8" fill="#94a3b8">Nov'23</text>
+            <text x="472" y="132" text-anchor="middle" font-size="8" fill="#94a3b8">Jan'24</text>
+            <text x="540" y="132" text-anchor="middle" font-size="8" fill="#94a3b8">Mar'24</text>
+          </svg>
+        </div>
+      </div>
+
+      <div style="background:var(--bg);border-radius:14px;padding:18px 22px;text-align:center;font-size:13px;color:var(--muted)">
+        👥 Data sourced from WHO, Johns Hopkins University, and Our World in Data. Statistics are approximate. Last updated: Early 2024.
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-logo"><div class="footer-logo-icon">🛡️</div> CovidCheck</div>
+      <p>For emergencies, call your local emergency services immediately.</p>
+    </div>
+  </footer>
+</div>
+
+<!-- ─────────── GUIDELINES PAGE ─────────── -->
+<div class="page" id="page-guidelines">
+  <div class="guide-wrap">
+    <div class="guide-header">
+      <div class="hero-badge" style="margin-bottom:14px">🛡️ WHO &amp; CDC Endorsed Guidelines</div>
+      <h1>COVID-19 Safety Guidelines</h1>
+      <p>Evidence-based precautions to protect yourself and those around you.</p>
+    </div>
+
+    <div class="guide-list">
+      <!-- Hand Hygiene -->
+      <div class="guide-card" style="background:#eff6ff;border-color:#bfdbfe;">
+        <button class="guide-card-head" onclick="toggleGuide(this)">
+          <div class="guide-card-icon">🙌</div>
+          <span class="guide-card-title" style="color:#1e40af">Hand Hygiene</span>
+          <span class="guide-chevron open">▾</span>
+        </button>
+        <div class="guide-card-body">
+          <div class="guide-tip"><div class="guide-tip-dot" style="background:#1d4ed8"></div>Wash hands frequently with soap and water for at least 20 seconds.</div>
+          <div class="guide-tip"><div class="guide-tip-dot" style="background:#1d4ed8"></div>Use hand sanitizer with at least 60% alcohol when soap is unavailable.</div>
+          <div class="guide-tip"><div class="guide-tip-dot" style="background:#1d4ed8"></div>Avoid touching your face, especially eyes, nose, and mouth.</div>
+          <div class="guide-tip"><div class="guide-tip-dot" style="background:#1d4ed8"></div>Clean hands before and after eating, using the restroom, and after coughing.</div>
+          <div class="guide-tip"><div class="guide-tip-dot" style="background:#1d4ed8"></div>Wash hands after removing gloves or a mask.</div>
+        </div>
+      </div>
+      <!-- Mask Usage -->
+      <div class="guide-card" style="background:#faf5ff;border-color:#d8b4fe;">
+        <button class="guide-card-head" onclick="toggleGuide(this)">
+          <div class="guide-card-icon">😷</div>
+          <span class="guide-card-title" style="color:#7e22ce">Mask Usage</span>
+          <span class="guide-chevron open">▾</span>
+        </button>
+        <div class="guide-card-body">
+          <div class="guide-tip"><div class="guide-tip-dot" style="background:#7e22ce"></div>Wear a well-fitting mask in crowded indoor settings or when ventilation is poor.</div>
+          <div class="guide-tip"><div class="guide-tip-dot" style="background:#7e22ce"></div>N95 or KN95 masks offer the best protection against airborne transmission.</div>
+          <div class="guide-tip"><div class="guide-tip-dot" style="background:#7e22ce"></div>Ensure the mask covers your nose and mouth completely.</div>
+          <div class="guide-tip"><div class="guide-tip-dot" style="background:#7e22ce"></div>Do not touch the mask while wearing; clean hands before removing.</div>
+          <div class="guide-tip"><div class="guide-tip-dot" style="background:#7e22ce"></div>Replace disposable masks after each use; wash cloth masks regularly.</div>
+        </div>
+      </div>
+      <!-- Social Distancing -->
+      <div class="guide-card" style="background:#f0fdf4;border-color:#86efac;">
+        <button class="guide-card-head" onclick="toggleGuide(this)">
+          <div class="guide-card-icon">↔️</div>
+          <span class="guide-card-title" style="color:#15803d">Social Distancing</span>
+          <span class="guide-chevron open">▾</span>
+        </button>
+        <div class="guide-card-body">
+          <div class="guide-tip"><div class="guide-tip-dot" style="background:#15803d"></div>Maintain at least 1 metre (3 feet) from others in public.</div>
+          <div class="guide-tip"><div class="guide-tip-dot" style="background:#15803d"></div>Avoid large gatherings, especially in enclosed spaces.</div>
+          <div class="guide-tip"><div class="guide-tip-dot" style="background:#15803d"></div>Work from home when possible during high-transmission periods.</div>
+          <div class="guide-tip"><div class="guide-tip-dot" style="background:#15803d"></div>Prefer outdoor activities over indoor socializing.</div>
+          <div class="guide-tip"><div class="guide-tip-dot" style="background:#15803d"></div>Limit contact with high-risk individuals (elderly, immunocompromised).</div>
+        </div>
+      </div>
+      <!-- Vaccination -->
+      <div class="guide-card" style="background:#eff6ff;border-color:#93c5fd;">
+        <button class="guide-card-head" onclick="toggleGuide(this)">
+          <div class="guide-card-icon">💉</div>
+          <span class="guide-card-title" style="color:#1d4ed8">Vaccination</span>
+          <span class="guide-chevron open">▾</span>
+        </button>
+        <div class="guide-card-body">
+          <div class="guide-tip"><div class="guide-tip-dot" style="background:#1d4ed8"></div>Get fully vaccinated against COVID-19 as soon as possible.</div>
+          <div class="guide-tip"><div class="guide-tip-dot" style="background:#1d4ed8"></div>Stay up to date with recommended booster doses.</div>
+          <div class="guide-tip"><div class="guide-tip-dot" style="background:#1d4ed8"></div>Even vaccinated individuals can transmit the virus — continue precautions.</div>
+          <div class="guide-tip"><div class="guide-tip-dot" style="background:#1d4ed8"></div>Consult your healthcare provider about which vaccine is right for you.</div>
+          <div class="guide-tip"><div class="guide-tip-dot" style="background:#1d4ed8"></div>Vaccination significantly reduces risk of severe illness and hospitalization.</div>
+        </div>
+      </div>
+      <!-- Self-Isolation -->
+      <div class="guide-card" style="background:#fff7ed;border-color:#fdba74;">
+        <button class="guide-card-head" onclick="toggleGuide(this)">
+          <div class="guide-card-icon">🏠</div>
+          <span class="guide-card-title" style="color:#c2410c">Self-Isolation</span>
+          <span class="guide-chevron open">▾</span>
+        </button>
+        <div class="guide-card-body">
+          <div class="guide-tip"><div class="guide-tip-dot" style="background:#c2410c"></div>Isolate immediately if you test positive for COVID-19.</div>
+          <div class="guide-tip"><div class="guide-tip-dot" style="background:#c2410c"></div>Stay in a separate room from household members when possible.</div>
+          <div class="guide-tip"><div class="guide-tip-dot" style="background:#c2410c"></div>Use a separate bathroom if available.</div>
+          <div class="guide-tip"><div class="guide-tip-dot" style="background:#c2410c"></div>Wear a mask if you must be around others in your home.</div>
+          <div class="guide-tip"><div class="guide-tip-dot" style="background:#c2410c"></div>Isolate for at least 5 days; end only when symptoms improve and fever resolves.</div>
+          <div class="guide-tip"><div class="guide-tip-dot" style="background:#c2410c"></div>Notify close contacts so they can get tested.</div>
+        </div>
+      </div>
+      <!-- When to seek help -->
+      <div class="guide-card" style="background:#fef2f2;border-color:#fca5a5;">
+        <button class="guide-card-head" onclick="toggleGuide(this)">
+          <div class="guide-card-icon">📞</div>
+          <span class="guide-card-title" style="color:#b91c1c">When to Seek Medical Help</span>
+          <span class="guide-chevron open">▾</span>
+        </button>
+        <div class="guide-card-body">
+          <div class="guide-tip"><div class="guide-tip-dot" style="background:#b91c1c"></div>Call emergency services immediately for difficulty breathing, persistent chest pain, confusion, or bluish lips.</div>
+          <div class="guide-tip"><div class="guide-tip-dot" style="background:#b91c1c"></div>Contact your doctor if symptoms worsen or do not improve after 5 days.</div>
+          <div class="guide-tip"><div class="guide-tip-dot" style="background:#b91c1c"></div>Seek testing if you've had close contact with a confirmed COVID-19 case.</div>
+          <div class="guide-tip"><div class="guide-tip-dot" style="background:#b91c1c"></div>Use telehealth services when available to avoid potential hospital exposure.</div>
+          <div class="guide-tip"><div class="guide-tip-dot" style="background:#b91c1c"></div>Monitor oxygen levels — below 95% warrants medical attention.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          <span>How long does COVID-19 incubation last?</span><span class="faq-icon">▾</span>
+        </button>
+        <div class="faq-a">The incubation period typically ranges from 1 to 14 days. Most people develop symptoms within 5–6 days. With Omicron variants, it may be shorter (2–4 days).</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          <span>What are the most common COVID-19 symptoms?</span><span class="faq-icon">▾</span>
+        </button>
+        <div class="faq-a">Common symptoms include fever, dry cough, fatigue, loss of taste or smell, sore throat, headache, congestion, nausea, and diarrhea. Symptoms vary by variant and vaccination status.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          <span>When am I contagious?</span><span class="faq-icon">▾</span>
+        </button>
+        <div class="faq-a">You can spread COVID-19 from 1–2 days before symptoms appear until 5–10 days after onset. Peak infectiousness is typically 1–2 days before and 2–3 days after symptoms begin. Asymptomatic cases can also spread the virus.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          <span>Can I get COVID-19 twice?</span><span class="faq-icon">▾</span>
+        </button>
+        <div class="faq-a">Yes, reinfection is possible, especially with new variants. Prior infection provides some immunity, but protection can wane. Vaccination alongside natural immunity (hybrid immunity) offers the strongest protection.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          <span>How effective are COVID-19 vaccines?</span><span class="faq-icon">▾</span>
+        </button>
+        <div class="faq-a">COVID-19 vaccines are highly effective at preventing severe disease, hospitalization, and death. Effectiveness against infection may vary with newer variants, but vaccines significantly reduce the risk of serious outcomes.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          <span>What is Long COVID?</span><span class="faq-icon">▾</span>
+        </button>
+        <div class="faq-a">Long COVID refers to symptoms that persist weeks to months after initial infection — fatigue, brain fog, shortness of breath, and joint pain are common. Studies suggest 10–30% of infected individuals experience some form of long COVID.</div>
+      </div>
+    </div>
+
+    <div class="sources-box">
+      <h3>Sources &amp; References</h3>
+      <p>Information sourced from the World Health Organization (WHO), U.S. Centers for Disease Control and Prevention (CDC), and peer-reviewed medical literature. Last updated 2024.</p>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-logo"><div class="footer-logo-icon">🛡️</div> CovidCheck</div>
+      <p>For emergencies, call your local emergency services immediately.</p>
+    </div>
+  </footer>
+</div>
+
+<!-- JS -->
+<script src="script.js"></script>
+<script>
+  (function() {
+    if (!localStorage.getItem('cc_token')) {
+      window.location.replace('/auth.html');
+      return;
+    }
+    const user = JSON.parse(localStorage.getItem('cc_user') || '{}');
+    if (user.name) {
+      const initials = user.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+      const avatarUrl = user.avatar && user.avatar !== 'null' && user.avatar !== '' ? user.avatar : null;
+      document.getElementById('nav-user').innerHTML =
+        `<div class="user-badge">
+          <div class="user-avatar">${avatarUrl ? `<img src="${avatarUrl}" onerror="this.parentElement.textContent='${initials}'"/>` : initials}</div>
+          ${user.name.split(' ')[0]}
+          <button onclick="logout()" style="background:none;border:none;cursor:pointer;color:var(--primary);font-size:12px;font-weight:700;margin-left:4px">✕</button>
+        </div>`;
+    }
+  })();
+  function logout() {
+    localStorage.removeItem('cc_token');
+    localStorage.removeItem('cc_user');
+    window.location.replace('/auth.html');
+  }
+</script>
+
+</body>
+</html>

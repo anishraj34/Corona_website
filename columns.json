@@ -1,0 +1,1 @@
+["patient_id", "age", "fever", "dry_cough", "sore_throat", "fatigue", "headache", "shortness_of_breath", "loss_of_smell", "loss_of_taste", "oxygen_level", "body_temperature", "travel_history", "contact_with_patient", "chest_pain", "gender_Male", "comorbidity_Asthma", "comorbidity_Diabetes", "comorbidity_Heart Disease"]
