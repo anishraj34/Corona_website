@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: corona-website
+    runtime: node
+    buildCommand: cd Backend && npm install
+    startCommand: node Backend/server.js
+    envVars:
+      - key: NODE_ENV
+        value: production

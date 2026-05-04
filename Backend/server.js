@@ -25,7 +25,8 @@ app.use(express.json());
 app.use(session({ secret: JWT_SECRET, resave: false, saveUninitialized: false }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(express.static(path.join(__dirname, '../Frontend')));
+const frontendPath = path.join(__dirname, '../Frontend');
+app.use(express.static(frontendPath));
 
 // MongoDB connection
 mongoose.connect(process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/mydatabase")
@@ -384,7 +385,7 @@ app.get("/auth/google/callback",
 
 // Root API
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, '../Frontend/auth.html'));
+    res.sendFile(path.join(frontendPath, 'auth.html'));
 });
 
 // GET users
@@ -491,7 +492,12 @@ app.post("/api/predict", async (req, res) => {
 
 // Serve frontend for all other routes
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../Frontend/index.html'));
+    const indexPath = path.join(frontendPath, 'index.html');
+    if (fs.existsSync(indexPath)) {
+        res.sendFile(indexPath);
+    } else {
+        res.status(404).send('Frontend not found. Make sure Frontend folder is in the repo root.');
+    }
 });
 
 // Start server

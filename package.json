@@ -1,0 +1,13 @@
+{
+  "name": "corona-website",
+  "version": "1.0.0",
+  "description": "CovidCheck - COVID-19 Risk Assessment",
+  "main": "Backend/server.js",
+  "scripts": {
+    "start": "node Backend/server.js",
+    "install-deps": "cd Backend && npm install"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
